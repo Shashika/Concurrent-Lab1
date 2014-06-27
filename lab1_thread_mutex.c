@@ -4,10 +4,11 @@
  *
  * Created on June 26, 2014, 2:00 PM
  */
-
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "timer.h"
+
 
 
 
@@ -24,6 +25,7 @@ typedef struct linkedlist{
 
 int init(linkedlist *list){
     list->head=NULL;
+    pthread_mutex_init(&(list->lock), NULL);
 }
 
 int member(int value, linkedlist *list){
@@ -50,7 +52,7 @@ int insert(int value, linkedlist *list){
     struct node* curr = head;
     struct node* pred = NULL;
     
-    
+    pthread_mutex_lock(&(list->lock));
     
     while(curr != NULL && curr->val < value){
         pred = curr;
@@ -67,11 +69,11 @@ int insert(int value, linkedlist *list){
         else{
             pred->next = temp;
         }
-        
+        pthread_mutex_unlock(&(list->lock));
         return 1;
     }
     else{
-        
+        pthread_mutex_unlock(&(list->lock));
         return 0;
     }
 }
@@ -105,6 +107,13 @@ int delete(int value, linkedlist *list){
 }
 
 
+
+void* Thread_sum(void* rank) {
+   return NULL;
+}  
+
+
+
 int main() {
 
     linkedlist list;
@@ -112,24 +121,32 @@ int main() {
     
     double start, finish, elapsed;
     int i;
+    int thread_count=2;
+    int thread;
+
+    pthread_t * thread_handles;
+    thread_handles = (pthread_t*) malloc (thread_count*sizeof(pthread_t)); 
     
-    /*GET_TIME(start);
-    //printf("%f",start);
-    insert(4,&head);
-    printf("%d",member(5,head));
-    GET_TIME(finish);
-    //elapsed = finish - start;
-    printf("%f",(finish-start));*/
-    
+   GET_TIME(start);
+   for (thread = 0; thread < thread_count; thread++)  
+      pthread_create(&thread_handles[thread], NULL,Thread_sum, thread);  
+
+   for (thread = 0; thread < thread_count; thread++) 
+      pthread_join(thread_handles[thread], NULL); 
+   GET_TIME(finish);
+   
+   
+    /*
     GET_TIME(start);
     for(i = 0; i<5; i++){
         insert(i,&list);
     }
     GET_TIME(finish);
     
+     */
+   
     printf("%f",(finish-start));
+    
+    
+    
 }
-
-
-
-
