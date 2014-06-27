@@ -36,6 +36,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/lab1.o \
+	${OBJECTDIR}/lab1_readwrite_lock.o \
+	${OBJECTDIR}/lab1_thread_mutex.o \
 	${OBJECTDIR}/lab_thread1.o
 
 
@@ -67,6 +69,16 @@ ${OBJECTDIR}/lab1.o: lab1.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab1.o lab1.c
+
+${OBJECTDIR}/lab1_readwrite_lock.o: lab1_readwrite_lock.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab1_readwrite_lock.o lab1_readwrite_lock.c
+
+${OBJECTDIR}/lab1_thread_mutex.o: lab1_thread_mutex.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab1_thread_mutex.o lab1_thread_mutex.c
 
 ${OBJECTDIR}/lab_thread1.o: lab_thread1.c 
 	${MKDIR} -p ${OBJECTDIR}

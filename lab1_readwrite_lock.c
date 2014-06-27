@@ -1,10 +1,9 @@
 /* 
- * File:   lab1_1.c
+ * File:   lab1_readwrite_lock.c
  * Author: shashika
  *
- * Created on June 26, 2014, 2:00 PM
+ * Created on June 27, 2014, 4:35 PM
  */
-
 
 #include <pthread.h>
 #include <stdio.h>
@@ -20,20 +19,22 @@ int isInsert = 1;
 int isMember = 1;
 int isDelete = 1;
 
+
+
 typedef struct node{
     int val;
     struct node *next;
 }node;
 
 typedef struct linkedlist{
-    pthread_mutex_t lock;
+    pthread_rwlock_t rwlock;
     node *head;
 }linkedlist;
 
 
 int init(linkedlist *list){
     list->head=NULL;
-    pthread_mutex_init(&(list->lock), NULL);
+    pthread_rwlock_init(&(list->rwlock),NULL);
 }
 
 linkedlist list;
@@ -43,13 +44,10 @@ int member(int value, linkedlist *list){
     node *head=list->head;
     struct node* temp = head;
     
-    pthread_mutex_lock(&(list->lock));
-    
     while(temp != NULL && temp->val < value){
         temp = temp->next;
     }
     if(temp == NULL || temp->val > value){
-        pthread_mutex_unlock(&(list->lock));
         return 0;
     }
     else{
@@ -59,7 +57,7 @@ int member(int value, linkedlist *list){
         else{
             isMember = 0;
         }
-        pthread_mutex_unlock(&(list->lock));
+        
         return 1;
     }
 }
@@ -71,8 +69,6 @@ int insert(int value, linkedlist *list){
     struct node* temp = head;
     struct node* curr = head;
     struct node* pred = NULL;
-    
-    pthread_mutex_lock(&(list->lock));
     
     while(curr != NULL && curr->val < value){
         pred = curr;
@@ -89,7 +85,6 @@ int insert(int value, linkedlist *list){
         else{
             pred->next = temp;
         }
-        pthread_mutex_unlock(&(list->lock));
         
         if(insertcount > 0){
             insertcount--;
@@ -100,7 +95,6 @@ int insert(int value, linkedlist *list){
         return 1;
     }
     else{
-        pthread_mutex_unlock(&(list->lock));
         return 0;
     }
 }
@@ -111,8 +105,6 @@ int delete(int value, linkedlist *list){
     struct node* temp = head;
     struct node* curr = head;
     struct node* pred = NULL;
-    
-    pthread_mutex_lock(&(list->lock));
     
     while(curr != NULL && curr->val < value){
         pred = curr;
@@ -135,16 +127,12 @@ int delete(int value, linkedlist *list){
         else{
             isDelete = 0;
         }
-        pthread_mutex_unlock(&(list->lock));
         return 1;
     }
     else{
-        pthread_mutex_unlock(&(list->lock));
         return 0;
     }
 }
-
-
 
 void* Thread_run(void* id) {
     while(isInsert != 0 || isDelete != 0 || isMember != 0){
@@ -152,14 +140,20 @@ void* Thread_run(void* id) {
 
         if(ran == 0){//insert
             int random = rand() % 10000;
+            pthread_rwlock_wrlock(&(list->rwlock));
             insert(random,&list);
+            pthread_rwlock_unlock(&(list->rwlock));
         }else if(ran == 1){
             int random = rand() % 10000;
+            pthread_rwlock_rdlock(&(list->rwlock));
             member(random,&list);
+            pthread_rwlock_unlock(&(list->rwlock));
         }
         else{
             int random = rand() % 10000;
+            pthread_rwlock_wrlock(&(list->rwlock));
             delete(random,&list);
+            pthread_rwlock_unlock(&(list->rwlock));
         }
     }
 }  
@@ -168,7 +162,7 @@ void* Thread_run(void* id) {
 
 int main() {
 
-
+ 
     init(&list);
     insertcount = totalcount*0.5;
     membercount = totalcount*0.3;
@@ -189,8 +183,6 @@ int main() {
    for (thread = 0; thread < thread_count; thread++) 
       pthread_join(thread_handles[thread], NULL); 
    GET_TIME(finish);
-
-    printf("%f\n",(finish-start));
-    
+      
+    printf("%f\n",(finish-start)); 
 }
-*/
