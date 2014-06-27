@@ -10,6 +10,11 @@
 #include "timer.h"
 
 
+linkedlist list;
+int totalcount=10;
+int insertcount = totalcount*0.5;
+int membercount = totalcount*0.3;
+int deletecount = totalcount*0.2;
 
 
 typedef struct node{
@@ -108,15 +113,26 @@ int delete(int value, linkedlist *list){
 
 
 
-void* Thread_sum(void* rank) {
-   return NULL;
+void* Thread_run(void* id) {
+    while(1){
+        int ran = rand() % 3;
+
+        if(ran == 0){//insert
+            insert(10,&list);
+        }else if(ran == 1){
+            member();
+        }
+        else{
+        
+        }
+    }
 }  
 
 
 
 int main() {
 
-    linkedlist list;
+
     init(&list);
     
     double start, finish, elapsed;
@@ -129,7 +145,7 @@ int main() {
     
    GET_TIME(start);
    for (thread = 0; thread < thread_count; thread++)  
-      pthread_create(&thread_handles[thread], NULL,Thread_sum, thread);  
+      pthread_create(&thread_handles[thread], NULL,Thread_run, (void*)thread);  
 
    for (thread = 0; thread < thread_count; thread++) 
       pthread_join(thread_handles[thread], NULL); 
