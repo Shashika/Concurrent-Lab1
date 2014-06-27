@@ -10,8 +10,9 @@
 #include "timer.h"
 #include <stdlib.h>
 
+
 //test
-struct node{
+/*struct node{
     int val;
     struct node *next;
 };
@@ -99,7 +100,7 @@ int main() {
     //elapsed = finish - start;
     printf("%f",(finish-start));*/
     
-    GET_TIME(start);
+ /*   GET_TIME(start);
     for(i = 0; i<1000; i++){
         
         while(1){
@@ -116,3 +117,4 @@ int main() {
     printf("%f",(finish-start));
 }
 
+*/

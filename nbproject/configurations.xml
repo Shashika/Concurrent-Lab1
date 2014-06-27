@@ -13,7 +13,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>lab1.c</itemPath>
-      <itemPath>lab1_thread_mutex.c</itemPath>
       <itemPath>lab_thread1.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -40,8 +39,6 @@
       </compileType>
       <item path="lab1.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="lab1_thread_mutex.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="lab_thread1.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -66,8 +63,6 @@
         </asmTool>
       </compileType>
       <item path="lab1.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="lab1_thread_mutex.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="lab_thread1.c" ex="false" tool="0" flavor2="0">
       </item>
