@@ -17,6 +17,7 @@ typedef struct node{
 }node;
 
 typedef struct linkedlist{
+    pthread_mutex_t lock;
     node *head;
 }linkedlist;
 
@@ -89,7 +90,7 @@ int delete(int value, linkedlist *list){
     
     if(curr != NULL && curr->val == value){
         if(pred == NULL){
-            head = curr->next;
+            list->head = curr->next;
             free(curr);
         }
         else{
@@ -128,4 +129,7 @@ int main() {
     
     printf("%f",(finish-start));
 }
+
+
+
 

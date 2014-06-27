@@ -36,7 +36,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/lab1.o \
-	${OBJECTDIR}/lab1_1.o \
 	${OBJECTDIR}/lab1_thread_mutex.o \
 	${OBJECTDIR}/lab_thread1.o
 
@@ -59,21 +58,16 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab1
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/concurrent-lab1
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab1: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/concurrent-lab1: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab1 ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/concurrent-lab1 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/lab1.o: lab1.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab1.o lab1.c
-
-${OBJECTDIR}/lab1_1.o: lab1_1.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab1_1.o lab1_1.c
 
 ${OBJECTDIR}/lab1_thread_mutex.o: lab1_thread_mutex.c 
 	${MKDIR} -p ${OBJECTDIR}
@@ -91,7 +85,7 @@ ${OBJECTDIR}/lab_thread1.o: lab_thread1.c
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/lab1
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/concurrent-lab1
 
 # Subprojects
 .clean-subprojects:
