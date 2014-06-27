@@ -36,7 +36,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/lab1.o \
-	${OBJECTDIR}/lab1_1.o
+	${OBJECTDIR}/lab1_1.o \
+	${OBJECTDIR}/lab1_thread_mutex.o \
+	${OBJECTDIR}/lab_thread1.o
 
 
 # C Compiler Flags
@@ -72,6 +74,16 @@ ${OBJECTDIR}/lab1_1.o: lab1_1.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab1_1.o lab1_1.c
+
+${OBJECTDIR}/lab1_thread_mutex.o: lab1_thread_mutex.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab1_thread_mutex.o lab1_thread_mutex.c
+
+${OBJECTDIR}/lab_thread1.o: lab_thread1.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/lab_thread1.o lab_thread1.c
 
 # Subprojects
 .build-subprojects:
