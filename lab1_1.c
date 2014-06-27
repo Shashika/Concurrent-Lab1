@@ -89,7 +89,7 @@ int main() {
 
     struct node* head;
     double start, finish, elapsed;
-    int i,ran;
+    int i,ran,result;
     
     /*GET_TIME(start);
     //printf("%f",start);
@@ -102,8 +102,13 @@ int main() {
     GET_TIME(start);
     for(i = 0; i<1000; i++){
         
-        ran = rand() % 10000;
-        insert(ran,&head);
+        while(1){
+            ran = rand() % 10000;
+            result = insert(ran,&head);
+            if(result == 1){
+                break;
+            }
+        }
         printf("%d\n",ran);
     }
     GET_TIME(finish);
