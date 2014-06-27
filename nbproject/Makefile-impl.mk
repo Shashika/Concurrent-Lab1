@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Concurrent-Lab1
+PROJECTNAME=Lab1
 
 # Active Configuration
 DEFAULTCONF=Debug
