@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "timer.h"
-
+#include <stdlib.h>
 
 //test
 struct node{
@@ -89,7 +89,7 @@ int main() {
 
     struct node* head;
     double start, finish, elapsed;
-    int i;
+    int i,ran;
     
     /*GET_TIME(start);
     //printf("%f",start);
@@ -101,7 +101,10 @@ int main() {
     
     GET_TIME(start);
     for(i = 0; i<1000; i++){
-        insert(i,&head);
+        
+        ran = rand() % 10000;
+        insert(ran,&head);
+        printf("%d\n",ran);
     }
     GET_TIME(finish);
     
