@@ -236,6 +236,8 @@ int main() {
     int thread_count=1;   
     pthread_t * thread_handles;
     
+    printf("Enter sample count :");
+    scanf("%d",&samplecount);
     
     for(run=0 ; run<3 ;run++){
         

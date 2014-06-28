@@ -200,6 +200,9 @@ int main() {
     double elapsedAll[samplecount];
     float insertp,memberp;
     
+    printf("Enter sample count :");
+    scanf("%d",&samplecount);
+    
     for(run=0 ; run<3 ;run++){
         
         if(run==0){
