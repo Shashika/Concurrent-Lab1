@@ -1,14 +1,12 @@
 Concurrent-Lab1
 ===============
 
-
-Running lab1_thread_mutex.c
----------------------------
-
-compiling:
-gcc lab1_thread_mutex.c -lpthread -lm
-
-running:
+gcc lab_thread1.c -lm
 ./a.out
 
+gcc lab1_thread_mutex.c -lpthread -lm
+./a.out
+
+gcc lab1_readwrite_lock.c -lpthread -lm
+./a.out
 
