@@ -258,9 +258,9 @@ int main() {
         for(thread_count=1;thread_count<=4;thread_count*=2){
 
             printf("\nUsing Configs:\n");
-            printf("Member% = %f\n",memberp);
-            printf("Insert% = %f\n",insertp);
-            printf("Delete% = %f\n",1-memberp-insertp);
+            printf("Member%% = %f\n",memberp);
+            printf("Insert%% = %f\n",insertp);
+            printf("Delete%% = %f\n",1-memberp-insertp);
             printf("Thread Count = %d\n",thread_count);
         
             for(s=0;s<samplecount;s++){
