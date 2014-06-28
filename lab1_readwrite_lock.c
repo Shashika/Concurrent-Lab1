@@ -5,11 +5,13 @@
  * Created on June 27, 2014, 4:35 PM
  */
 
+
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "timer.h"
 
+/*
 
 int totalcount=10;
 int insertcount;
@@ -186,3 +188,5 @@ int main() {
       
     printf("%f\n",(finish-start)); 
 }
+
+ */

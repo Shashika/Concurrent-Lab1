@@ -10,15 +10,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "timer.h"
+#include <math.h>
 
 
-int totalcount=10;
+int totalcount=10000;
+int samplecount=25;
 int insertcount;
 int membercount ;
 int deletecount; 
-int isInsert = 1;
-int isMember = 1;
-int isDelete = 1;
+int isInsert;
+int isMember;
+int isDelete;
 
 typedef struct node{
     int val;
@@ -32,6 +34,16 @@ typedef struct linkedlist{
 
 
 int init(linkedlist *list){
+    if(list->head!=NULL){
+        node* temp1=list->head;
+        node* temp2=temp1->next;
+        while(temp2!=NULL){
+            free(temp1);
+            temp1=temp2;
+            temp2=temp2->next;
+        }
+        free(temp1);
+    }
     list->head=NULL;
     pthread_mutex_init(&(list->lock), NULL);
 }
@@ -45,6 +57,15 @@ int member(int value, linkedlist *list){
     
     pthread_mutex_lock(&(list->lock));
     
+    if(membercount > 0){
+        membercount--;
+    }
+    else{
+        isMember = 0;
+        pthread_mutex_unlock(&(list->lock));
+        return 0;
+    }
+    
     while(temp != NULL && temp->val < value){
         temp = temp->next;
     }
@@ -53,12 +74,6 @@ int member(int value, linkedlist *list){
         return 0;
     }
     else{
-        if(membercount > 0){
-            membercount--;
-        }
-        else{
-            isMember = 0;
-        }
         pthread_mutex_unlock(&(list->lock));
         return 1;
     }
@@ -73,6 +88,15 @@ int insert(int value, linkedlist *list){
     struct node* pred = NULL;
     
     pthread_mutex_lock(&(list->lock));
+    
+    if(insertcount > 0){
+        insertcount--;
+    }
+    else{
+        isInsert = 0;
+        pthread_mutex_unlock(&(list->lock));
+        return 0;
+    }
     
     while(curr != NULL && curr->val < value){
         pred = curr;
@@ -91,12 +115,6 @@ int insert(int value, linkedlist *list){
         }
         pthread_mutex_unlock(&(list->lock));
         
-        if(insertcount > 0){
-            insertcount--;
-        }
-        else{
-            isInsert = 0;
-        }
         return 1;
     }
     else{
@@ -114,6 +132,15 @@ int delete(int value, linkedlist *list){
     
     pthread_mutex_lock(&(list->lock));
     
+    if(deletecount > 0){
+        deletecount--;
+    }
+    else{
+        isDelete = 0;
+        pthread_mutex_unlock(&(list->lock));
+        return 0;
+    }
+    
     while(curr != NULL && curr->val < value){
         pred = curr;
         curr = curr->next;        
@@ -122,19 +149,12 @@ int delete(int value, linkedlist *list){
     if(curr != NULL && curr->val == value){
         if(pred == NULL){
             list->head = curr->next;
-            free(curr);
         }
         else{
             pred->next = curr->next;
             free(curr);
         }
         
-        if(deletecount > 0){
-            deletecount--;
-        }
-        else{
-            isDelete = 0;
-        }
         pthread_mutex_unlock(&(list->lock));
         return 1;
     }
@@ -145,52 +165,145 @@ int delete(int value, linkedlist *list){
 }
 
 
+void printAllData(linkedlist *list){
+    node *temp =list->head;
+    while(temp!=NULL){
+        printf("%d->",temp->val);
+        temp=temp->next;
+    }
+}
+
+void populate(linkedlist *list,int count){
+    int i,result;
+    double ran;
+    
+    insertcount=10000;
+    isInsert=1;
+    
+    for(i = 0; i<count; i++){
+        
+        while(1){
+            ran = rand() % 10000;
+            result = insert(ran,list);
+            if(result == 1){
+                break;
+            }
+        }
+    }
+}
+
+double getMean(double values[],int count){
+    int i;
+    double total=0;
+    for(i=0;i<count;i++){
+        total+=values[i];
+    }
+    return total/count;
+}
+
+double getStD(double values[],int count,double mean){
+    int i;
+    double total=0;
+    for(i=0;i<count;i++){
+        total+=pow(values[i]-mean,2);
+    }
+    return pow(total/(count-1),0.5);
+}
 
 void* Thread_run(void* id) {
-    while(isInsert != 0 || isDelete != 0 || isMember != 0){
+    while(isInsert != 0  || isMember != 0 || isDelete != 0){
         int ran = rand() % 3;
-
+        int random = rand() % 10000;
         if(ran == 0){//insert
-            int random = rand() % 10000;
             insert(random,&list);
         }else if(ran == 1){
-            int random = rand() % 10000;
             member(random,&list);
         }
         else{
-            int random = rand() % 10000;
             delete(random,&list);
         }
     }
 }  
 
 
-
 int main() {
 
-
-    init(&list);
-    insertcount = totalcount*0.5;
-    membercount = totalcount*0.3;
-    deletecount = totalcount*0.2;
-    
-    double start, finish, elapsed;
-    int i;
-    int thread_count=2;
+    double start, finish, elapsed,mean,std;
+    double elapsedAll[samplecount];
+    int i,run,s;
     int thread;
-
+    float insertp,memberp;
+    int thread_count=1;   
     pthread_t * thread_handles;
-    thread_handles = (pthread_t*) malloc (thread_count*sizeof(pthread_t)); 
     
-   GET_TIME(start);
-   for (thread = 0; thread < thread_count; thread++)  
-      pthread_create(&thread_handles[thread], NULL,Thread_run, (void*)thread);  
+    
+    for(run=0 ; run<3 ;run++){
+        
+        if(run==0){
+            memberp=0.99;
+            insertp=0.005;
+        }else if(run==1){
+            memberp=0.90;
+            insertp=0.05;
+        }else{
+            memberp=0.50;
+            insertp=0.25;
+        }
+        
+        printf("\n===================\nRun %d started...\n",run);
+        
+        for(thread_count=1;thread_count<=4;thread_count*=2){
 
-   for (thread = 0; thread < thread_count; thread++) 
-      pthread_join(thread_handles[thread], NULL); 
-   GET_TIME(finish);
+            printf("\nUsing Configs:\n");
+            printf("Member% = %f\n",memberp);
+            printf("Insert% = %f\n",insertp);
+            printf("Delete% = %f\n",1-memberp-insertp);
+            printf("Thread Count = %d\n",thread_count);
+        
+            for(s=0;s<samplecount;s++){
+                
+                init(&list);
+                populate(&list,1000);
+                
+                insertcount = totalcount*insertp;
+                membercount = totalcount*memberp;
+                deletecount = totalcount*(1-insertp-memberp);
 
-    printf("%f\n",(finish-start));
+                isInsert = 1;
+                isMember = 1;
+                isDelete = 1;
+
+                thread_handles = (pthread_t*) malloc (thread_count*sizeof(pthread_t)); 
+
+                thread = 0;
+                GET_TIME(start);
+                for (thread = 0; thread < thread_count; thread++)  {
+                    pthread_create(&thread_handles[thread], NULL,Thread_run, (void*)(&run));  
+                }
+
+                for (thread = 0; thread < thread_count; thread++) 
+                    pthread_join(thread_handles[thread], NULL); 
+                GET_TIME(finish);
+
+                elapsed=finish-start;
+                elapsedAll[s]=elapsed;
+                printf("Sample %d elapsed : %f\n",s,elapsed);
+                //printAllData(&list);
+                free(thread_handles);
+            }
+
+            mean=getMean(elapsedAll,samplecount);
+            std=getStD(elapsedAll,samplecount,mean);
+
+            printf("\nResults:\n");
+            printf("Avg Time = %f\n",mean);
+            printf("StD Time = %f\n",std);
+            printf("-------------\n");
+        
+        }
+        
+        printf("\nRun %d finished....\n",run);
+
+    }
     
 }
-*/
